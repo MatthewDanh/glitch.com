@@ -1,34 +1,141 @@
-/*
-  This is your site JavaScript code - you can add interactivity!
+/* Credit and Thanks:
+Matrix - Particles.js;
+SliderJS - Ettrics;
+Design - Sara Mazal Web;
+Fonts - Google Fonts
 */
 
-// Print a message in the browser's dev tools console each time the page loads
-// Use your menus or right-click / control-click and choose "Inspect" > "Console"
-console.log("Hello 🌎");
+window.onload = function () {
+  Particles.init({
+    selector: ".background",
+  });
+};
+const particles = Particles.init({
+  selector: ".background",
+  color: ["#9b59b6", "#ffff00", "#000000"],
+  connectParticles: true,
+  responsive: [
+    {
+      breakpoint: 768,
+      options: {
+        color: ["#faebd7", "#9b59b6", "#ffff00"],
+        maxParticles: 43,
+        connectParticles: false,
+      },
+    },
+  ],
+});
 
-/* 
-Make the "Click me!" button move when the visitor clicks it:
-- First add the button to the page by following the steps in the TODO 🚧
-*/
-const btn = document.querySelector("button"); // Get the button from the page
-if (btn) { // Detect clicks on the button
-  btn.onclick = function () {
-    // The 'dipped' class in style.css changes the appearance on click
-    btn.classList.toggle("dipped");
-  };
+class NavigationPage {
+  constructor() {
+    this.currentId = null;
+    this.currentTab = null;
+    this.tabContainerHeight = 70;
+    this.lastScroll = 0;
+    let self = this;
+    $(".nav-tab").click(function () {
+      self.onTabClick(event, $(this));
+    });
+    $(window).scroll(() => {
+      this.onScroll();
+    });
+    $(window).resize(() => {
+      this.onResize();
+    });
+  }
+
+  onTabClick(event, element) {
+    event.preventDefault();
+    let scrollTop =
+      $(element.attr("href")).offset().top - this.tabContainerHeight + 1;
+    $("html, body").animate({ scrollTop: scrollTop }, 600);
+  }
+
+  onScroll() {
+    this.checkHeaderPosition();
+    this.findCurrentTabSelector();
+    this.lastScroll = $(window).scrollTop();
+  }
+
+  onResize() {
+    if (this.currentId) {
+      this.setSliderCss();
+    }
+  }
+
+  checkHeaderPosition() {
+    const headerHeight = 75;
+    if ($(window).scrollTop() > headerHeight) {
+      $(".nav-container").addClass("nav-container--scrolled");
+    } else {
+      $(".nav-container").removeClass("nav-container--scrolled");
+    }
+    let offset =
+      $(".nav").offset().top +
+      $(".nav").height() -
+      this.tabContainerHeight -
+      headerHeight;
+    if (
+      $(window).scrollTop() > this.lastScroll &&
+      $(window).scrollTop() > offset
+    ) {
+      $(".nav-container").addClass("nav-container--move-up");
+      $(".nav-container").removeClass("nav-container--top-first");
+      $(".nav-container").addClass("nav-container--top-second");
+    } else if (
+      $(window).scrollTop() < this.lastScroll &&
+      $(window).scrollTop() > offset
+    ) {
+      $(".nav-container").removeClass("nav-container--move-up");
+      $(".nav-container").removeClass("nav-container--top-second");
+      $(".nav-container-container").addClass("nav-container--top-first");
+    } else {
+      $(".nav-container").removeClass("nav-container--move-up");
+      $(".nav-container").removeClass("nav-container--top-first");
+      $(".nav-container").removeClass("nav-container--top-second");
+    }
+  }
+
+  findCurrentTabSelector(element) {
+    let newCurrentId;
+    let newCurrentTab;
+    let self = this;
+    $(".nav-tab").each(function () {
+      let id = $(this).attr("href");
+      let offsetTop = $(id).offset().top - self.tabContainerHeight;
+      let offsetBottom =
+        $(id).offset().top + $(id).height() - self.tabContainerHeight;
+      if (
+        $(window).scrollTop() > offsetTop &&
+        $(window).scrollTop() < offsetBottom
+      ) {
+        newCurrentId = id;
+        newCurrentTab = $(this);
+      }
+    });
+    if (this.currentId != newCurrentId || this.currentId === null) {
+      this.currentId = newCurrentId;
+      this.currentTab = newCurrentTab;
+      this.setSliderCss();
+    }
+  }
+
+  setSliderCss() {
+    let width = 0;
+    let left = 0;
+    if (this.currentTab) {
+      width = this.currentTab.css("width");
+      left = this.currentTab.offset().left;
+    }
+    $(".nav-tab-slider").css("width", width);
+    $(".nav-tab-slider").css("left", left);
+  }
 }
 
-
-// ----- GLITCH STARTER PROJECT HELPER CODE -----
-
-// Open file when the link in the preview is clicked
-let goto = (file, line) => {
-  window.parent.postMessage(
-    { type: "glitch/go-to-line", payload: { filePath: file, line: line } }, "*"
-  );
-};
-// Get the file opening button from its class name
-const filer = document.querySelectorAll(".fileopener");
-filer.forEach((f) => {
-  f.onclick = () => { goto(f.dataset.file, f.dataset.line); };
-});
+new NavigationPage();
+/* Credit and Thanks:
+Matrix - Particles.js;
+SliderJS - Ettrics;
+Design - Sara Mazal Web;
+Fonts - Google Fonts
+*/
