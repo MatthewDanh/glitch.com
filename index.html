@@ -1,97 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <title>CodePen - Navigation PageDesign/Lesson</title>
+    <title>Seven Circles of Friendship</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="sara mazal lessons" />
-    <meta name="keywords" content="HTML, CSS, JavaScript, mazal, icons" />
-    <meta name="author" content="Matthew Nichols" />
-    <!--  SGVsbG8hIE15IG5hbWUgaXMgU2FyYSBNYXphbC4gV2VsY29tZSB0byBteSBDb2RlUGVuIQ== -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;500&family=Raleway:wght@100;200;300;400;500&family=Roboto:wght@300;400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-      integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
-      crossorigin="anonymous"
-    />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.3/particles.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"
-    />
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <script src="script.js" defer></script>
   </head>
   <body>
-    <!-- partial:index.partial.html -->
-    <sectio class="nav">
-      <h1>MATTHEW NICHOLS</h1>
-      <h3 class="span loader">
-        <span class="m">S</span>
-        <span class="m">T</span>
-        <span class="m">U</span>
-        <span class="m">D</span>
-        <span class="m">E</span>
-        <span class="m">N</span>
-        <span class="m">T</span>
-        <span class="m">&nbsp;</span>
-        <span class="m">P</span>
-        <span class="m">O</span>
-        <span class="m">R</span>
-        <span class="m">T</span>
-        <span class="m">F</span>
-        <span class="m">O</span>
-        <span class="m">L</span>
-        <span class="m">I</span>
-        <span class="m">O</span>
-        <span class="m">&nbsp;</span>
+    <header class="header">
+      <nav class="primary-navigation">
+        <div class="nav-brand">
+          <h1>Seven Circles</h1>
+        </div>
+        <ul class="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#seven-circles">Seven Circles</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button
+          class="nav-toggle"
+          aria-label="Toggle Navigation Menu"
+          onclick="toggleNav()"
+        >
+          <i class="fa fa-bars"></i>
+        </button>
+      </nav>
+    </header>
 
-      </h3>
-      <div class="nav-container">
-        <a class="nav-tab" href="#tab-projects">PROJECTS</a
-        ><a class="nav-tab" href="#tab-essays">ESSAYS</a
-        ><a class="nav-tab" href="#tab-connect">CONNECT</a
-        ><a class="nav-tab" href="#tab-schedule">SCHEDULE</a
-        ><a class="nav-tab" href="#tab-github">GITHUB</a
-        ><span class="nav-tab-slider"></span>
+    <section id="home" class="hero">
+      <div class="hero-content">
+        <h2>Exploring the Connections That Shape Us</h2>
+        <p>Discover the seven circles of friendship and their impact on our lives.</p>
+        <a href="#seven-circles" class="btn-primary">Start Exploring</a>
       </div>
-    </sectio>
-    <main class="main">
-      <section class="slider" id="tab-projects">
-        <h1>PROJECTS</h1>
-        <h2>Explore a showcase of my hands-on work, featuring technical builds, creative experiments, and interdisciplinary endeavors.</h2>
-        
-      </section>
-      <section class="slider" id="tab-essays">
-        <h1>ESSAYS</h1>
-        <h2>Dive into my written analyses on a variety of topics, blending critical thought and personal perspective.</h2>
-      </section>
-      <section class="slider" id="tab-connect">
-        <a href="https://www.linkedin.com/in/matthewdanh/"><h1>CONNECT</h1></a>
-        <h2>Get in touch! I’m open to collaboration, questions, or just chatting about shared interests.</h2>
-      </section>
-      <section class="slider" id="tab-schedule">
-        <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2k4B4YuY4UZuXzPo9my-J3YVlKMdJLf8S3aqV5hNAImsSTgM8r4vlnavAih89aOzXrTM0JWnTo?gv=true"><h1>SCHEDULE</h1></a>
-        <h2>View my availability to coordinate meetings or catch up on upcoming activities and events.</h2>
-      </section>
-      <section class="slider" id="tab-github">
-        <a href="https://github.com/MatthewDanh"><h1>GITHUB</h1></a>
-        <h2>Read my reflections, insights, and updates as I navigate my academic journey and creative pursuits.</h2>
-      </section>
-    </main>
-    <canvas class="background"></canvas>
-    <!-- partial -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="./script.js"></script>
+    </section>
+
+    <section id="about" class="about">
+      <div class="container">
+        <div class="about-content">
+          <img
+            src="https://cdn.glitch.global/9f17100c-c4b8-45da-b652-3a2ff4a7ae8e/PXL_20240407_151229200.PORTRAIT~5.jpg?v=1731403454400"
+            class="profile-avatar"
+            alt="Profile Picture"
+          />
+          <div class="about-details">
+            <h2>About Me</h2>
+            <p>
+              Welcome! I'm Glitch, an advocate of meaningful connections and interdisciplinary studies.
+              Join me as I explore how relationships shape our lives through the Seven Circles framework.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="seven-circles" class="seven-circles">
+      <div class="container">
+        <h2>The Seven Circles of Friendship</h2>
+        <p>
+          Relationships are at the heart of our lives. The Seven Circles framework categorizes connections by
+          their closeness, helping us reflect on the bonds that matter most.
+        </p>
+        <div id="graph-container" style="height: 500px; margin-top: 2rem;"></div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact">
+      <div class="container">
+        <h2>Contact Me</h2>
+        <p>
+          Have questions or want to collaborate? Reach out—I’d love to hear from you!
+        </p>
+        <form action="#" method="post" class="contact-form">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required />
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required />
+          <label for="message">Message:</label>
+          <textarea id="message" name="message" rows="4" required></textarea>
+          <button type="submit" class="btn-primary">Send Message</button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2024 Glitch. All rights reserved.</p>
+        <ul class="social-links">
+          <li>
+            <a href="#"><i class="fa fa-twitter"></i></a>
+          </li>
+          <li>
+            <a href="#"><i class="fa fa-github"></i></a>
+          </li>
+          <li>
+            <a href="#"><i class="fa fa-linkedin"></i></a>
+          </li>
+          <li>
+            <a href="https://glitch.com/@Glitch"
+              ><i class="fa fa-external-link"></i> Glitch Profile</a
+            >
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- Theme Styles -->
+    <style>
+      body {
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      body.dark-theme {
+        background-color: #121212;
+        color: #f0f0f0;
+      }
+    </style>
   </body>
 </html>
