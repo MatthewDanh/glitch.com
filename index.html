@@ -2,102 +2,1114 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Matthew's Portfolio</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="sara mazal lessons" />
-    <meta name="keywords" content="HTML, CSS, JavaScript, mazal, icons" />
-    <meta name="author" content="Matthew Nichols" />
-    <!--  SGVsbG8hIE15IG5hbWUgaXMgU2FyYSBNYXphbC4gV2VsY29tZSB0byBteSBDb2RlUGVuIQ== -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;500&family=Raleway:wght@100;200;300;400;500&family=Roboto:wght@300;400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-      integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
-      crossorigin="anonymous"
-    />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.3/particles.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"
-    />
-    <link rel="stylesheet" href="./style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>F-Zero-Zero (Cyan & Magenta Edition)</title>
+    <style>
+      /* Global styles */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        color: white;
+        font-family: monospace;
+        overflow: hidden;
+        position: relative;
+        height: 100%;
+        width: 100%;
+      }
+      /* Create a subtle "CRT scanlines" overlay using a repeating linear gradient */
+      body::after {
+        content: "";
+        pointer-events: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: repeating-linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.02) 1px,
+          transparent 1px,
+          transparent 2px
+        );
+      }
+
+      /* Canvas */
+      canvas {
+        border: 2px solid #ffffff;
+        display: block;
+        margin: 0 auto;
+        width: auto;
+        height: 100vh;
+        image-rendering: pixelated; /* Forces pixel-style rendering for a retro feel */
+      }
+
+      /*************************************************************************
+       * Menu & Overlay Styles
+       *************************************************************************/
+      #startMenu,
+      #gameOverScreen,
+      #pausedOverlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /* Animated background gradient for a futuristic vibe */
+        background: linear-gradient(-45deg, #000000, #420042, #000000, #420042);
+        background-size: 400% 400%;
+        animation: menuGradient 10s ease infinite;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+      }
+      @keyframes menuGradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      #startMenu.hidden,
+      #gameOverScreen.hidden,
+      #pausedOverlay.hidden {
+        display: none;
+      }
+
+      /* Retro Neon Flicker Animation for Main Titles */
+      h1 {
+        font-size: 3rem;
+        margin: 0;
+        text-transform: uppercase;
+        text-align: center;
+        animation: neonFlicker 2s infinite;
+      }
+      @keyframes neonFlicker {
+        0% {
+          text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+        }
+        50% {
+          text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+        }
+        55% {
+          text-shadow: none;
+        }
+        57% {
+          text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+        }
+        100% {
+          text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+        }
+      }
+
+      .menu-button {
+        padding: 15px 30px;
+        margin: 20px;
+        font-size: 20px;
+        cursor: pointer;
+        background-color: #222;
+        border: 2px solid #ff00ff;
+        color: white;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        box-shadow: 0 0 10px rgba(0, 255, 234, 0.3);
+      }
+      .menu-button:hover {
+        background-color: #ff00ff;
+        color: #000;
+        box-shadow: 0 0 20px rgba(255, 0, 255, 0.8);
+        transform: translateY(-3px);
+      }
+
+      /* Instructions Overlay */
+      #instructions {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 16px;
+        max-width: 80%;
+        line-height: 1.5;
+        color: #cccccc;
+      }
+      #instructions strong {
+        color: #00ffff;
+      }
+
+      /* Responsive Canvas */
+      @media (max-width: 420px) {
+        canvas {
+          width: 90%;
+          height: auto;
+        }
+      }
+
+      /*************************************************************************
+       * HUD (Health & Nitro Bars)
+       *************************************************************************/
+      #healthContainer,
+      #nitroContainer {
+        position: absolute;
+        left: 10px;
+        border: 2px solid #00ffff;
+        border-radius: 5px;
+        overflow: hidden;
+        background-color: #333;
+        z-index: 5;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+      }
+      #healthContainer {
+        top: 20px;
+        width: 150px;
+        height: 30px;
+      }
+      #nitroContainer {
+        top: 60px;
+        width: 150px;
+        height: 12px;
+        border-radius: 3px;
+      }
+
+      #healthBar {
+        height: 100%;
+        width: 100%;
+        transition: width 0.3s, background-color 0.3s;
+        background: linear-gradient(90deg, #ff00ff, #00ffff);
+      }
+      #nitroBar {
+        height: 100%;
+        width: 100%;
+        transition: width 0.3s;
+        /* Changed gradient to yellow-green */
+        background: linear-gradient(90deg, #ffd700, #39ff14);
+      }
+
+      /*************************************************************************
+       * Pause Button
+       *************************************************************************/
+      #pauseButton {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 5;
+      }
+
+      /*************************************************************************
+       * Keyframes for minor UI Animations
+       *************************************************************************/
+      /* Subtle glow for bar fill if needed */
+      @keyframes barGlow {
+        0% {
+          box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+        }
+        50% {
+          box-shadow: 0 0 10px rgba(255, 255, 255, 1);
+        }
+        100% {
+          box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+        }
+      }
+
+      /* Enhanced Neon Effects */
+      @keyframes neonPulse {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 5px #00ffff) drop-shadow(0 0 15px #ff00ff);
+        }
+        50% {
+          filter: drop-shadow(0 0 15px #ff00ff) drop-shadow(0 0 5px #00ffff);
+        }
+      }
+
+      /* Achievement Notification */
+      #achievementPopup {
+        position: fixed;
+        top: 100px;
+        right: -300px;
+        background: linear-gradient(45deg, #000033, #330033);
+        border: 2px solid #00ffff;
+        border-radius: 8px;
+        padding: 15px;
+        color: white;
+        z-index: 1000;
+        transition: right 0.5s ease;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      }
+      #achievementPopup.show {
+        right: 20px;
+      }
+
+      /* Score Multiplier Display */
+      #multiplierDisplay {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        font-size: 24px;
+        color: #ff00ff;
+        text-shadow: 0 0 10px #00ffff;
+      }
+
+      /* Enhanced particle effects */
+      .particle {
+        animation: neonPulse 2s infinite;
+      }
+
+      /* Add new color variables */
+      :root {
+        --neon-yellow: #ffd700;
+        --neon-green: #39ff14;
+        --neon-orange: #ff6b35;
+        --cyber-blue: #00fff9;
+      }
+
+      /* Enhanced score display */
+      .score-display {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(45deg, #000033, #330033);
+        border: 2px solid var(--cyber-blue);
+        border-radius: 10px;
+        padding: 10px 20px;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .score-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--neon-yellow);
+        text-shadow: 0 0 10px var(--neon-orange);
+      }
+
+      .high-score {
+        font-size: 16px;
+        color: var(--cyber-blue);
+        margin-top: 5px;
+      }
+
+      /* Enhanced road stripes */
+      .road-stripe {
+        box-shadow: 0 0 10px var(--neon-green);
+      }
+
+      /* Update gradient colors */
+      @keyframes menuGradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* Enhance stripes with a glowing pulse */
+      .road-stripe-glow {
+        animation: neonPulse 1.5s ease-in-out infinite alternate;
+      }
+
+      @keyframes slideInFromTop {
+        from {
+          transform: translateY(-100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes shakeScreen {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20% {
+          transform: translateX(-5px);
+        }
+        40% {
+          transform: translateX(5px);
+        }
+        60% {
+          transform: translateX(-5px);
+        }
+        80% {
+          transform: translateX(5px);
+        }
+      }
+
+      /* Apply the new animations to startMenu and gameOverScreen */
+      #startMenu {
+        animation: slideInFromTop 1s ease-out, fadeIn 1.2s ease;
+      }
+      #gameOverScreen {
+        animation: shakeScreen 1.2s ease, fadeIn 1s ease;
+      }
+    </style>
   </head>
   <body>
-    <!-- partial:index.partial.html -->
-    <sectio class="nav">
-      <h1>MATTHEW DANH NICHOLS</h1>
-        <span class="m">&nbsp;</span>
-      <h3 class="span loader">
-        <span class="m">S</span>
-        <span class="m">T</span>
-        <span class="m">U</span>
-        <span class="m">D</span>
-        <span class="m">E</span>
-        <span class="m">N</span>
-        <span class="m">T</span>
-        <span class="m">&nbsp;</span>
-        <span class="m">P</span>
-        <span class="m">O</span>
-        <span class="m">R</span>
-        <span class="m">T</span>
-        <span class="m">F</span>
-        <span class="m">O</span>
-        <span class="m">L</span>
-        <span class="m">I</span>
-        <span class="m">O</span>
-
-      </h3>
-      <div class="nav-container">
-        <a class="nav-tab" href="#tab-projects">PROJECTS</a
-        ><a class="nav-tab" href="essays.html">ESSAYS</a
-        ><a class="nav-tab" href="#tab-connect">CONNECT</a
-        ><a class="nav-tab" href="#tab-schedule">SCHEDULE</a
-        ><a class="nav-tab" href="#tab-github">GITHUB</a
-        ><span class="nav-tab-slider"></span>
+    <!-- Start Menu -->
+    <div id="startMenu">
+      <h1>F-Zero-Zero</h1>
+      <button id="startButton" class="menu-button">Start Game</button>
+      <div id="instructions">
+        <p>Use <strong>Left/Right Arrow Keys</strong> to switch lanes.</p>
+        <p>Press <strong>Spacebar</strong> to use Nitro/Boost.</p>
+        <p>Press <strong>Pause</strong> to pause the game.</p>
       </div>
-    </sectio>
-    <main class="main">
-    <section class="slider" id="tab-projects">
-  <a href="projects.html" id="">
-    <h1 class="fade-in">PROJECTS</h1>
-    <h2 class="fade-in">
-      Explore a showcase of my hands-on work, featuring technical builds, creative experiments, and interdisciplinary endeavors.
-    </h2>
-  </a>
-</section>
+    </div>
 
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen" class="hidden">
+      <h1>Game Over!</h1>
+      <p id="finalScore">Your Score: 0</p>
+      <button id="restartButton" class="menu-button">Restart Game</button>
+    </div>
 
+    <!-- Paused Overlay -->
+    <div id="pausedOverlay" class="hidden">
+      <h1>Game Paused</h1>
+      <button id="resumeButton" class="menu-button">Resume Game</button>
+    </div>
 
-      <section class="slider" id="tab-essays">
-        <a href="essays.html"><h1 class="fade-in">ESSAYS</h1></a>
-        <h2 class="fade-in">Dive into my written analyses on a variety of topics, blending critical thought and personal perspective.</h2>
-      </section>
-      <section class="slider" id="tab-connect">
-        <a href="https://www.linkedin.com/in/matthewdanh/"><h1 class="fade-in">CONNECT</h1></a>
-        <h2 class="fade-in">Get in touch! I’m open to collaboration, questions, or just chatting about shared interests.</h2>
-      </section>
-      <section class="slider" id="tab-schedule">
-        <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2k4B4YuY4UZuXzPo9my-J3YVlKMdJLf8S3aqV5hNAImsSTgM8r4vlnavAih89aOzXrTM0JWnTo?gv=true"><h1 class="fade-in">SCHEDULE</h1></a>
-        <h2 class="fade-in">View my availability to coordinate meetings or catch up on upcoming activities and events.</h2>
-      </section>
-      <section class="slider" id="tab-github">
-        <a href="https://github.com/MatthewDanh"><h1 class="fade-in">GITHUB</h1></a>
-        <h2 class="fade-in">Read my reflections, insights, and updates as I navigate my academic journey and creative pursuits.</h2>
-      </section>
-    </main>
-    <canvas class="background"></canvas>
-    <!-- partial -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="./script.js"></script>
+    <!-- Health Bar -->
+    <div id="healthContainer">
+      <div id="healthBar"></div>
+    </div>
+
+    <!-- Nitro Bar -->
+    <div id="nitroContainer">
+      <div id="nitroBar"></div>
+    </div>
+
+    <!-- Pause Button -->
+    <button id="pauseButton" class="menu-button">Pause</button>
+
+    <!-- Audio Elements -->
+    <audio
+      id="backgroundMusic"
+      src="https://cdn.glitch.global/your-project-id/background-music.mp3"
+      loop
+    ></audio>
+    <audio
+      id="collisionSound"
+      src="https://cdn.glitch.global/your-project-id/collision-sound.mp3"
+    ></audio>
+
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+    <div id="achievementPopup" class="hidden">
+      <h3>Achievement Unlocked!</h3>
+      <p id="achievementText"></p>
+    </div>
+    <div id="multiplierDisplay">×1</div>
+
+    <!-- Add score display HTML -->
+    <div class="score-display">
+      <div class="score-value" id="scoreValue">0</div>
+      <div class="high-score" id="highScoreValue">Best: 0</div>
+    </div>
+
+    <script>
+      /* ------------------- EXISTING GAME LOGIC (unchanged) ------------------- */
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
+
+      // Utility: Adjust canvas size dynamically for responsiveness
+      function adjustCanvasSize() {
+        canvas.width = Math.min(window.innerWidth, 400);
+        canvas.height = canvas.width * 1.5; // Maintain aspect ratio 2:3
+      }
+      adjustCanvasSize();
+      window.addEventListener("resize", adjustCanvasSize);
+
+      // Start Menu Elements
+      const startMenu = document.getElementById("startMenu");
+      const startButton = document.getElementById("startButton");
+
+      // Game Over Screen Elements
+      const gameOverScreen = document.getElementById("gameOverScreen");
+      const finalScoreText = document.getElementById("finalScore");
+      const restartButton = document.getElementById("restartButton");
+
+      // Paused Overlay Elements
+      const pausedOverlay = document.getElementById("pausedOverlay");
+      const resumeButton = document.getElementById("resumeButton");
+
+      // Health Bar Elements
+      const healthContainer = document.getElementById("healthContainer");
+      const healthBar = document.getElementById("healthBar");
+
+      // Nitro Bar Elements
+      const nitroContainer = document.getElementById("nitroContainer");
+      const nitroBar = document.getElementById("nitroBar");
+
+      // Car Sprites
+      const playerCarImg = new Image();
+      const obstacleCarImg = new Image();
+      const obstacleTruckImg = new Image();
+
+      playerCarImg.src =
+        "https://cdn.glitch.global/14227346-b74e-42c4-9514-33a84753d29d/freepik__adjust__98213.png?v=1733491872197";
+      obstacleCarImg.src =
+        "https://cdn.glitch.global/14227346-b74e-42c4-9514-33a84753d29d/freepik-export-20241206133603hIzs.png?v=1733492186519";
+      obstacleTruckImg.src =
+        "https://cdn.glitch.global/14227346-b74e-42c4-9514-33a84753d29d/freepik-export-20241206135409C6Qe.png?v=1733493272884";
+
+      let loadedImageCount = 0;
+      const totalImages = 3;
+
+      function checkAllImagesLoaded() {
+        loadedImageCount++;
+        if (loadedImageCount === totalImages) {
+          console.log("All images loaded, ready to start the game.");
+        }
+      }
+      function onImageError(e) {
+        console.error("Failed to load image:", e.target.src);
+      }
+
+      playerCarImg.onload = checkAllImagesLoaded;
+      obstacleCarImg.onload = checkAllImagesLoaded;
+      obstacleTruckImg.onload = checkAllImagesLoaded;
+
+      playerCarImg.onerror = onImageError;
+      obstacleCarImg.onerror = onImageError;
+      obstacleTruckImg.onerror = onImageError;
+
+      // Audio Elements
+      const backgroundMusic = document.getElementById("backgroundMusic");
+      const collisionSound = document.getElementById("collisionSound");
+
+      // Game Variables
+      let carWidth = canvas.width * 0.065; // Slightly smaller to fit in lanes
+      let carHeight = carWidth * 1.5;
+      const lanes = [
+        canvas.width * 0.1, // Far left
+        canvas.width * 0.3, // Center-left
+        canvas.width * 0.5, // Center
+        canvas.width * 0.7, // Center-right
+        canvas.width * 0.9, // Far right
+      ];
+      let currentLane = 2;
+      let targetLane = currentLane;
+      let laneTransition = 0;
+      const laneTransitionSpeed = 8; // Increased from 5 for more responsive controls
+      let baseObstacleSpeed = 3; // Decreased from 4
+      const baseSpawnChanceMultiplier = 0.015; // Decreased from 0.02
+      const difficultyIncreaseInterval = 15000; // Increased from 10000 to slow difficulty ramp
+      const collisionForgivenessMargin = 0.8; // New variable for more forgiving collisions
+
+      let health = 5;
+      const maxHealth = 5;
+
+      let score = 0;
+      let highScore = parseInt(localStorage.getItem("highScore")) || 0;
+
+      let obstacles = [];
+      const obstacleWidth = carWidth;
+      const obstacleHeight = carHeight;
+
+      // Road stripes
+      let stripes = [];
+      const stripeWidth = canvas.width * 0.015;
+      const stripeHeight = canvas.height * 0.07;
+      let stripeSpeed = canvas.height * 0.005;
+      const stripeSpacing = canvas.height * 0.1;
+
+      // Road gradient
+      let gradientOffset = 0;
+      let gradientSpeed = canvas.height * 0.0005;
+
+      // Difficulty Scaling
+      let difficultyLevel = 1;
+      let lastDifficultyIncreaseTime = Date.now();
+
+      // Controls
+      let leftPressed = false;
+      let rightPressed = false;
+      let boostPressed = false;
+
+      // Game State
+      let isPaused = false;
+      let isGameRunning = false;
+
+      // Particles
+      let particles = [];
+
+      // Nitro
+      let maxNitro = 150; // Increased from 100
+      let currentNitro = maxNitro;
+      let isBoostActive = false;
+      const nitroRechargeRate = 0.1; // Increased from 0.05
+      const nitroDrainRate = 0.3; // Decreased from 0.5
+
+      let boostStartTime = 0; // Define this along with other game variables
+
+      // Listeners
+      document.addEventListener("keydown", keyDownHandler);
+      document.addEventListener("keyup", keyUpHandler);
+
+      function keyDownHandler(e) {
+        if (e.key === "ArrowLeft") {
+          leftPressed = true;
+        } else if (e.key === "ArrowRight") {
+          rightPressed = true;
+        } else if (e.key === " ") {
+          boostPressed = true;
+          e.preventDefault();
+        }
+      }
+
+      function keyUpHandler(e) {
+        if (e.key === "ArrowLeft") {
+          leftPressed = false;
+        } else if (e.key === "ArrowRight") {
+          rightPressed = false;
+        } else if (e.key === " ") {
+          boostPressed = false;
+        }
+      }
+
+      // Particle Class
+      class Particle {
+        constructor(x, y) {
+          this.x = x;
+          this.y = y;
+          this.size = Math.random() * 3 + 2;
+          this.speedX = (Math.random() - 0.5) * 5;
+          this.speedY = (Math.random() - 0.5) * 5 - 2;
+          this.color = this.getRandomNeonColor();
+          this.opacity = 1;
+          this.decay = 0.02;
+          this.glow = Math.random() > 0.5 ? "#00ffff" : "#ff00ff";
+          this.rotation = Math.random() * Math.PI * 2;
+        }
+
+        getRandomNeonColor() {
+          const colors = [
+            "#00ffff", // cyan
+            "#ff00ff", // magenta
+            "#ffd700", // yellow
+            "#39ff14", // green
+            "#ff6b35", // orange
+          ];
+          return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          this.opacity -= this.decay;
+          if (this.opacity < 0) {
+            this.opacity = 0;
+          }
+        }
+
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.opacity;
+          ctx.translate(this.x, this.y);
+          ctx.rotate(this.rotation);
+
+          // Add glowing effect
+          ctx.shadowColor = this.glow;
+          ctx.shadowBlur = 10;
+
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.restore();
+        }
+      }
+
+      // Initialize stripes
+      const stripePositions = [
+        canvas.width * 0.2, // Between lanes 1-2
+        canvas.width * 0.4, // Between lanes 2-3
+        canvas.width * 0.6, // Between lanes 3-4
+        canvas.width * 0.8, // Between lanes 4-5
+      ];
+
+      function initializeStripes() {
+        stripes = [];
+        for (let i = 0; i < canvas.height / stripeSpacing; i++) {
+          stripePositions.forEach((xPos) => {
+            stripes.push({
+              x: xPos - stripeWidth / 2,
+              y: i * stripeSpacing,
+            });
+          });
+        }
+      }
+
+      // Start Game
+      function startGame() {
+        startMenu.classList.add("hidden");
+        resetGame();
+        isGameRunning = true;
+        backgroundMusic.currentTime = 0;
+        backgroundMusic.play();
+        gameLoop();
+      }
+
+      // Restart Game
+      function restartGame() {
+        gameOverScreen.classList.add("hidden");
+        resetGame();
+        isGameRunning = true;
+        backgroundMusic.currentTime = 0;
+        backgroundMusic.play();
+        gameLoop();
+      }
+
+      // Resume Game
+      function resumeGame() {
+        pausedOverlay.classList.add("hidden");
+        isPaused = false;
+        backgroundMusic.play();
+        gameLoop();
+      }
+
+      // Pause Game
+      function pauseGame() {
+        isPaused = true;
+        pausedOverlay.classList.remove("hidden");
+        backgroundMusic.pause();
+      }
+
+      // Reset Game
+      function resetGame() {
+        currentLane = 2;
+        targetLane = currentLane;
+        laneTransition = 0;
+        health = maxHealth;
+        score = 0;
+        obstacles = [];
+        particles = [];
+        initializeStripes();
+        stripeSpeed = canvas.height * 0.005;
+        difficultyLevel = 1;
+        lastDifficultyIncreaseTime = Date.now();
+        gradientOffset = 0;
+        currentNitro = maxNitro;
+        updateHealthBar();
+        updateNitroBar();
+        isBoostActive = false;
+      }
+
+      // Additional polish: Flash screen on collision
+      function flashScreen() {
+        ctx.save();
+        ctx.fillStyle = "rgba(255, 0, 255, 0.3)";
+        ctx.shadowColor = "#ff00ff";
+        ctx.shadowBlur = 30;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+
+        // Screen shake effect
+        canvas.style.transform = "translateX(5px)";
+        setTimeout(() => {
+          canvas.style.transform = "translateX(-5px)";
+          setTimeout(() => {
+            canvas.style.transform = "translateX(0)";
+          }, 50);
+        }, 50);
+      }
+
+      // Particle effects for collisions
+      function createParticles(x, y) {
+        for (let i = 0; i < 30; i++) {
+          particles.push(new Particle(x, y));
+        }
+      }
+
+      // Main Game Loop
+      let actualCarX = lanes[2];
+      const smoothingFactor = 0.15;
+
+      // Add enhanced movement variables
+      const driftIntensity = 0.05; // Reduced from 0.2
+      const driftSpeed = 0.15; // Slightly increased for responsiveness
+      const maxDriftAngle = 0.1; // New: Limit maximum rotation
+      let driftAngle = 0;
+      let lastPosition = lanes[2];
+
+      function gameLoop() {
+        if (!isGameRunning || isPaused) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Continuous boost usage while space is held
+        if (boostPressed && currentNitro > 0) {
+          // If boost was not active before, mark start time
+          if (!isBoostActive) {
+            boostStartTime = Date.now();
+          }
+          isBoostActive = true;
+          currentNitro -= nitroDrainRate; // Drain while held
+          updateNitroBar();
+        } else {
+          isBoostActive = false;
+          // Recharge if not boosting
+          currentNitro = Math.min(currentNitro + nitroRechargeRate, maxNitro);
+          updateNitroBar();
+        }
+
+        // Move & draw background gradient
+        drawMovingGradient();
+
+        // Draw & move road stripes
+        ctx.fillStyle = "#ff00ff";
+        stripes.forEach((stripe) => {
+          stripe.y += stripeSpeed * (isBoostActive ? 1.5 : 1);
+          ctx.save();
+          ctx.fillStyle = createStripeGradient(stripe.y, stripeHeight);
+          ctx.shadowColor = "#ff00ff";
+          ctx.shadowBlur = 10;
+          ctx.fillRect(stripe.x, stripe.y, stripeWidth, stripeHeight);
+          ctx.restore();
+          if (stripe.y > canvas.height) {
+            stripe.y = -stripeHeight;
+          }
+        });
+
+        // Smooth lane transitions
+        if (leftPressed && targetLane > 0) {
+          targetLane--;
+          leftPressed = false;
+        } else if (rightPressed && targetLane < lanes.length - 1) {
+          targetLane++;
+          rightPressed = false;
+        }
+
+        const targetX = lanes[targetLane];
+        const movement = targetX - actualCarX;
+
+        // Smoother drift with limits
+        driftAngle = Math.max(
+          -maxDriftAngle,
+          Math.min(maxDriftAngle, movement * driftIntensity)
+        );
+        actualCarX += movement * driftSpeed;
+
+        // Draw player car with limited effects
+        ctx.save();
+        ctx.translate(actualCarX, canvas.height - carHeight - 10);
+        ctx.rotate(driftAngle);
+
+        // Add light trail when boosting
+        if (isBoostActive) {
+          ctx.save();
+          ctx.globalAlpha = 0.3;
+          ctx.fillStyle = "#ffd700";
+          ctx.fillRect(-carWidth / 2, 0, carWidth, carHeight + 10);
+          ctx.restore();
+        }
+
+        // Simplified trail effect only during sharp movement
+        if (Math.abs(movement) > 5) {
+          ctx.globalAlpha = 0.2;
+          ctx.drawImage(playerCarImg, -carWidth / 2, 10, carWidth, carHeight);
+        }
+
+        ctx.globalAlpha = 1;
+        ctx.drawImage(playerCarImg, -carWidth / 2, 0, carWidth, carHeight);
+        ctx.restore();
+
+        updateHealthBar();
+        updateScoreDisplay();
+
+        // Update & draw obstacles
+        obstacles.forEach((obs, index) => {
+          const speedMultiplier = isBoostActive ? 1.3 : 1; // obstacles appear a bit faster if boosting
+          obs.y += obs.speed * speedMultiplier;
+
+          ctx.save();
+          // Add shadow effect
+          ctx.shadowColor = "#000000";
+          ctx.shadowBlur = 15;
+          ctx.shadowOffsetY = 10;
+
+          // Draw the obstacle with rotation based on speed
+          ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+          ctx.rotate(obs.y * 0.01); // Subtle rotation effect
+          ctx.drawImage(
+            obs.image,
+            -obs.width / 2,
+            -obs.height / 2,
+            obs.width,
+            obs.height
+          );
+
+          // Add speed lines when boosting
+          if (isBoostActive) {
+            ctx.strokeStyle = "#ff00ff";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(-obs.width / 2, obs.height / 2);
+            ctx.lineTo(-obs.width / 2 - 10, obs.height / 2 + 20);
+            ctx.stroke();
+          }
+          ctx.restore();
+
+          // Collision detection
+          if (
+            actualCarX - (carWidth * collisionForgivenessMargin) / 2 <
+              obs.x + obs.width &&
+            actualCarX + (carWidth * collisionForgivenessMargin) / 2 > obs.x &&
+            canvas.height - carHeight - 10 < obs.y + obs.height &&
+            canvas.height - 10 > obs.y
+          ) {
+            health--;
+            flashScreen();
+            createParticles(actualCarX, canvas.height - carHeight - 10);
+            collisionSound.currentTime = 0;
+            collisionSound.play();
+            obstacles.splice(index, 1);
+
+            if (health <= 0) {
+              endGame();
+              return;
+            }
+          }
+        });
+
+        // Filter out obstacles that moved off screen
+        obstacles = obstacles.filter((obs) => obs.y < canvas.height);
+
+        // Spawn new obstacles
+        const baseSpawnChance = baseSpawnChanceMultiplier * difficultyLevel;
+        if (Math.random() < baseSpawnChance) {
+          if (obstacles.length < 15) {
+            const lane = Math.floor(Math.random() * lanes.length);
+            // Avoid spawning in adjacent lanes if possible
+            const validLane =
+              obstacles.length > 0
+                ? obstacles.every(
+                    (obs) =>
+                      Math.abs(
+                        lanes.indexOf(obs.x + obstacleWidth / 2) - lane
+                      ) > 1
+                  )
+                : true;
+
+            if (validLane) {
+              const obstacleType = Math.random() < 0.7 ? "car" : "truck";
+              const obs = {
+                x: lanes[lane] - obstacleWidth / 2,
+                y: -obstacleHeight,
+                speed: Math.random() * 3 + baseObstacleSpeed + difficultyLevel,
+                image:
+                  obstacleType === "car" ? obstacleCarImg : obstacleTruckImg,
+                width: obstacleWidth,
+                height: obstacleHeight,
+              };
+              obstacles.push(obs);
+            }
+          }
+        }
+
+        // Difficulty scaling
+        if (
+          Date.now() - lastDifficultyIncreaseTime >
+          difficultyIncreaseInterval
+        ) {
+          difficultyLevel = Math.min(difficultyLevel + 0.5, 5); // Cap max difficulty and increase more slowly
+          stripeSpeed += 0.2; // Reduced from 0.3
+          lastDifficultyIncreaseTime = Date.now();
+        }
+
+        // Update & draw particles
+        particles = particles.filter((p) => {
+          p.update();
+          p.draw();
+          return p.opacity > 0;
+        });
+
+        // Update combo system
+        if (Date.now() - lastScoreTime < 2000) {
+          combo++;
+          scoreMultiplier = Math.min(8, 1 + Math.floor(combo / 10));
+          document.getElementById(
+            "multiplierDisplay"
+          ).textContent = `×${scoreMultiplier}`;
+        } else {
+          combo = 0;
+          scoreMultiplier = 1;
+          document.getElementById("multiplierDisplay").textContent = "×1";
+        }
+
+        // Check achievements
+        if (
+          !achievements.speedDemon.earned &&
+          isBoostActive &&
+          Date.now() - boostStartTime > 5000
+        ) {
+          achievements.speedDemon.earned = true;
+          showAchievement(achievements.speedDemon);
+        }
+        if (!achievements.survivor.earned && score > 1000) {
+          achievements.survivor.earned = true;
+          showAchievement(achievements.survivor);
+        }
+
+        // Increase score with multiplier
+        score += scoreMultiplier;
+        lastScoreTime = Date.now();
+
+        requestAnimationFrame(gameLoop);
+      }
+
+      function drawMovingGradient() {
+        const gradient = ctx.createLinearGradient(
+          0,
+          gradientOffset,
+          0,
+          gradientOffset + canvas.height
+        );
+        gradient.addColorStop(0, "#000033");
+        gradient.addColorStop(0.5, "#330033");
+        gradient.addColorStop(1, "#000033");
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        gradientOffset += gradientSpeed * (isBoostActive ? 1.5 : 1);
+        if (gradientOffset >= canvas.height) {
+          gradientOffset = 0;
+        }
+      }
+
+      function createStripeGradient(y, height) {
+        const stripeGradient = ctx.createLinearGradient(0, y, 0, y + height);
+        stripeGradient.addColorStop(0, "#ff00ff");
+        stripeGradient.addColorStop(1, "#00ffff");
+        return stripeGradient;
+      }
+
+      function updateHealthBar() {
+        const healthPercentage = (health / maxHealth) * 100;
+        healthBar.style.width = healthPercentage + "%";
+
+        if (healthPercentage > 60) {
+          healthBar.style.backgroundColor = "green";
+        } else if (healthPercentage > 30) {
+          healthBar.style.backgroundColor = "orange";
+        } else {
+          healthBar.style.backgroundColor = "red";
+        }
+      }
+
+      function updateNitroBar() {
+        const nitroPercentage = (currentNitro / maxNitro) * 100;
+        nitroBar.style.width = nitroPercentage + "%";
+        // If you'd like, you can animate a subtle glow:
+        // nitroBar.style.animation = "barGlow 1.5s infinite";
+      }
+
+      function updateScoreDisplay() {
+        const scoreElement = document.getElementById("scoreValue");
+        const highScoreElement = document.getElementById("highScoreValue");
+
+        scoreElement.textContent = score.toLocaleString();
+        highScoreElement.textContent = `Best: ${highScore.toLocaleString()}`;
+
+        // Add pulse effect on score change
+        scoreElement.style.transform = "scale(1.1)";
+        setTimeout(() => {
+          scoreElement.style.transform = "scale(1)";
+        }, 100);
+      }
+
+      function endGame() {
+        isGameRunning = false;
+        backgroundMusic.pause();
+
+        if (score > highScore) {
+          highScore = score;
+          localStorage.setItem("highScore", highScore);
+        }
+        finalScoreText.textContent = `Your Score: ${score}`;
+        gameOverScreen.classList.remove("hidden");
+      }
+
+      // Achievement System
+      function showAchievement(achievement) {
+        const popup = document.getElementById("achievementPopup");
+        document.getElementById(
+          "achievementText"
+        ).textContent = `${achievement.name}: ${achievement.desc}`;
+        popup.classList.add("show");
+        setTimeout(() => popup.classList.remove("show"), 3000);
+      }
+
+      const achievements = {
+        speedDemon: {
+          name: "Speed Demon",
+          desc: "Use nitro for 5 seconds straight",
+          earned: false,
+        },
+        perfectDrift: {
+          name: "Perfect Drift",
+          desc: "Change lanes 10 times without hitting obstacles",
+          earned: false,
+        },
+        survivor: {
+          name: "Survivor",
+          desc: "Reach 1000 points",
+          earned: false,
+        },
+      };
+
+      let scoreMultiplier = 1;
+      let combo = 0;
+      let lastScoreTime = Date.now();
+
+      startButton.addEventListener("click", startGame);
+      restartButton.addEventListener("click", restartGame);
+      resumeButton.addEventListener("click", resumeGame);
+
+      const pauseButton = document.getElementById("pauseButton");
+      pauseButton.addEventListener("click", () => {
+        if (isGameRunning && !isPaused) {
+          pauseGame();
+        }
+      });
+
+      initializeStripes();
+
+      window.addEventListener("keydown", (e) => {
+        // Prevent page from scrolling with arrow keys/space
+        if (
+          ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(
+            e.key
+          )
+        ) {
+          e.preventDefault();
+        }
+      });
+    </script>
   </body>
 </html>
