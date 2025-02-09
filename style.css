@@ -231,7 +231,10 @@ button {
 
 button:hover {
   background: #0056b3;
+  transform: scale(1.05);
+  transition: transform 0.3s ease, background 0.3s ease;
 }
+
 h4, ul {
   text-align:start;
     font-size: 2.5vw;
@@ -243,4 +246,33 @@ h4, ul {
   padding:1em;
   line-height:1.75;
   overflow:scroll;
+}
+
+/* Link Hover Animation */
+a {
+  color: #9b59b6;
+  text-decoration: none;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* Section Fade-In Animation */
+section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
 }
