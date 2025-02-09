@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.init();
     }
 
+    // Initialize event listeners
     init() {
       const navTabs = document.querySelectorAll(".nav-tab");
       const navContainer = document.querySelector(".nav-container");
@@ -43,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
       window.addEventListener("resize", () => this.updateSlider());
     }
 
+    // Smooth scroll to section
     scrollToSection(event, tab) {
       event.preventDefault();
       const targetId = tab.getAttribute("href");
@@ -58,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    // Handle scroll events
     handleScroll(navContainer) {
       const headerHeight = 75;
 
@@ -72,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.highlightCurrentTab();
     }
 
+    // Highlight the current tab based on scroll position
     highlightCurrentTab() {
       const navTabs = document.querySelectorAll(".nav-tab");
       let currentTab = null;
@@ -96,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    // Update the position and width of the slider
     updateSlider(activeTab) {
       const slider = document.querySelector(".nav-tab-slider");
 
